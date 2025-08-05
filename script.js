@@ -48,6 +48,8 @@ async function buscarClima(cidade) {
         vento = responseJson.wind.speed;
 
         console.log(responseJson);
+
+        
         mostrarClima()
 
     } catch (erro) {
@@ -55,38 +57,71 @@ async function buscarClima(cidade) {
     }
 
 }
+function imgClima(descricao){
+    descricao = descricao.toLowerCase();
+
+    if (descricao.includes("nublado")) return "img/nublado.png";
+    if (descricao.includes("céu limpo")) return "img/ensolarado.png";
+    if (descricao.includes("chuva")) return "img/chuva.png";
+    if (descricao.includes("tempestade")) return "img/tempestade.png";
+    if (descricao.includes("neve")) return "img/neve.png";
+    if (descricao.includes("neblina") || descricao.includes("névoa")) return "img/neblina.png";
+
+    return "img/padrao.png";
+}
+
 
 function mostrarClima() {
     let conteudos = document.querySelector(".conteudo");
 
     conteudos.innerHTML = `
-
-            <h1>${nome}, ${pais}</h1>
-            <div class="area-graus">
-                <img src="img/wb_sunny_50dp_E3E3E3_FILL0_wght400_GRAD0_opsz48.png">
-                <div class="content-graus">
-                    <h2>${temperatura} C°</h2>
-                    <h3>${clima}</h3>
-                </div>
+        <h1>${nome}, ${pais}</h1>
+        <div class="area-graus">
+            <img src="${imgClima(clima)}">
+            <div class="content-graus">
+                <h2>${temperatura} C°</h2>
+                <h3>${clima}</h3>
             </div>
-            <div class="temp-area">
-                <div class="temp">
-                    <p>MAX</p>
-                    <h4>${max} C°</h4>
-                </div>
-                <div class="temp">
-                    <p>MIN</p>
-                    <h4>${min} C°</h4>
-                </div>
-                <div class="temp">
-                    <p>Humidade</p>
-                    <h4>${humidade} %</h4>
-                </div>
-                <div class="temp">
-                    <p>Vento</p>
-                    <h4>${vento} KM/h</h4>
-                </div>
+        </div>
+        <div class="temp-area">
+            <div class="temp">
+                <p>MAX</p>
+                <h4>${max} C°</h4>
             </div>
-
+            <div class="temp">
+                <p>MIN</p>
+                <h4>${min} C°</h4>
+            </div>
+            <div class="temp">
+                <p>Humidade</p>
+                <h4>${humidade} %</h4>
+            </div>
+            <div class="temp">
+                <p>Vento</p>
+                <h4>${vento} KM/h</h4>
+            </div>
+        </div>
+        <div id="map"></div>
     `;
+    montarMap(latitude, longitude)
+}
+
+let map;
+
+function montarMap(lat, lon) {
+    
+    if (map) {
+        map.remove();
+    }
+    map = L.map('map', {
+        center: [lat, lon],
+        zoom: 10,
+        zoomControl: false 
+    });
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 20,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
 }
