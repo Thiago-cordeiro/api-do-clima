@@ -15,7 +15,7 @@ section{
 }
 .card{
     width: 300px;
-    min-height: 300px;
+    min-height: 100px;
     padding: 20px;
     border: #47C9FF 1px solid;
     display: flex;
